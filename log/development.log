@@ -1,0 +1,425 @@
+  [1m[36m (115.0ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL) [0m
+  [1m[35m (0.1ms)[0m  select sqlite_version(*)
+  [1m[36m (146.3ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.3ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to CreatePosts (20150308200703)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.8ms)[0m  CREATE TABLE "posts" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "link" varchar, "upvotes" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20150308200703"]]
+  [1m[35m (156.4ms)[0m  commit transaction
+Migrating to CreateComments (20150308200712)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  CREATE TABLE "comments" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "body" varchar, "upvotes" integer, "post_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36m (0.4ms)[0m  [1mCREATE  INDEX "index_comments_on_post_id" ON "comments" ("post_id")[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20150308200712"]]
+  [1m[36m (104.6ms)[0m  [1mcommit transaction[0m
+Migrating to DeviseCreateUsers (20150309014356)
+  [1m[35m (0.2ms)[0m  begin transaction
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in change at /home/ubruno/rails-apps/angular/flapper-news/db/migrate/20150309014356_devise_create_users.rb:34)
+  [1m[36m (0.5ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar, "reset_password_sent_at" datetime, "remember_created_at" datetime, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" datetime, "last_sign_in_at" datetime, "current_sign_in_ip" varchar, "last_sign_in_ip" varchar, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35m (0.5ms)[0m  CREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")
+  [1m[36m (0.2ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.4ms)[0m  CREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20150309014356"]]
+  [1m[35m (124.0ms)[0m  commit transaction
+Migrating to AddUsernameToUser (20150309014433)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.8ms)[0m  ALTER TABLE "users" ADD "username" varchar
+  [1m[36m (0.2ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+
+  [1m[36m (0.5ms)[0m  [1mCREATE UNIQUE INDEX "index_users_on_username" ON "users" ("username")[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20150309014433"]]
+  [1m[36m (115.5ms)[0m  [1mcommit transaction[0m
+Migrating to AddUserRefToPosts (20150309033349)
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36m (0.7ms)[0m  [1mALTER TABLE "posts" ADD "user_id" integer[0m
+  [1m[35m (0.5ms)[0m  CREATE  INDEX "index_posts_on_user_id" ON "posts" ("user_id")
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20150309033349"]]
+  [1m[35m (105.0ms)[0m  commit transaction
+Migrating to AddUserRefToComments (20150309033358)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.5ms)[0m  ALTER TABLE "comments" ADD "user_id" integer
+  [1m[36m (0.2ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comments_on_post_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comments_on_post_id' AND type='index'
+[0m
+  [1m[35m (0.5ms)[0m  CREATE  INDEX "index_comments_on_user_id" ON "comments" ("user_id")
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20150309033358"]]
+  [1m[35m (105.0ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.4ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comments_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comments_on_user_id' AND type='index'
+
+  [1m[36m (0.4ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_comments_on_post_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_comments_on_post_id' AND type='index'
+[0m
+  [1m[35m (0.4ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_posts_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_posts_on_user_id' AND type='index'
+
+  [1m[36m (0.4ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_username' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_username' AND type='index'
+[0m
+  [1m[35m (0.3ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+
+  [1m[36m (0.3ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+
+
+Started GET "/" for 127.0.0.1 at 2015-10-12 11:47:38 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by ApplicationController#angular as HTML
+  Rendered layouts/application.html.erb within layouts/application (287.1ms)
+Completed 200 OK in 358ms (Views: 352.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/bootstrap/dist/css/bootstrap-4ba81789c305c87d166a6b54d443eb41.css?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/application-6441d49869332754c7333d59c0d4e548.css?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/angular/angular-dd9b868f194cd3c412cf05669f220b2e.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/angular-rails-templates-c9e94de22520f11aa00564c9a904ef73.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/angular-ui-router/release/angular-ui-router-1f327c8210f1d632f63a99ed5c32c086.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/angular-devise/lib/devise-69eae682f9c545faafc1edd52518c6ee.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/app-df51dcf09811a7ae11de826b031c3df6.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/auth/_login-d6bca1aec30c78ab9d380f11b4b0d12d.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/auth/_register-f0de7fc43f36529c5fc05803cd7536b0.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/home/_home-e6822ec26280e03e1fdfee8548793cc1.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/home/mainCtrl-a6f9c57714140677cf8c5d853aca7cb4.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/nav/_nav-a1a883891585f4042a8404b4080f7f51.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/auth/authCtrl-92f7148e0bf20d8ff497ac472be4788b.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/nav/navCtrl-3fb56cc75e5c8345beb4172d48bbeed7.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/posts/PostsCtrl-2554bc09da9125f57875644bbe100b2b.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/posts/_posts-95f7ab5c865b3d5d6ea39fba9c6bffa9.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/posts/post-639b8efb9bbad8fe4759f9d42b2561da.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started GET "/assets/application-2cfed3f9a60ef9457b1d507a6e8e18e4.js?body=1" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+
+
+Started POST "/users/sign_in.json" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+Processing by Devise::SessionsController#create as JSON
+  Parameters: {"user"=>{}, "session"=>{"user"=>{}}}
+Completed 401 Unauthorized in 10ms
+
+
+Started GET "/posts.json" for 127.0.0.1 at 2015-10-12 11:47:39 -0300
+Processing by PostsController#index as JSON
+  [1m[35mPost Load (0.3ms)[0m  SELECT "posts".* FROM "posts"
+Completed 200 OK in 25ms (Views: 1.7ms | ActiveRecord: 0.5ms)
+
+
+Started POST "/posts.json" for 127.0.0.1 at 2015-10-12 11:47:44 -0300
+Processing by PostsController#create as JSON
+  Parameters: {"title"=>"fsdfsdf", "link"=>"sdfsdf", "post"=>{"title"=>"fsdfsdf", "link"=>"sdfsdf"}}
+Completed 401 Unauthorized in 1ms
+
+
+Started POST "/posts.json" for 127.0.0.1 at 2015-10-12 11:47:54 -0300
+Processing by PostsController#create as JSON
+  Parameters: {"title"=>"sdfdsf", "link"=>"sdfsdf", "post"=>{"title"=>"sdfdsf", "link"=>"sdfsdf"}}
+Completed 401 Unauthorized in 1ms
+
+
+Started GET "/assets/bootstrap/dist/css/bootstrap.css.map" for 127.0.0.1 at 2015-10-12 11:47:59 -0300
+
+
+Started POST "/users/sign_in.json" for 127.0.0.1 at 2015-10-12 11:48:49 -0300
+Processing by Devise::SessionsController#create as JSON
+  Parameters: {"user"=>{}, "session"=>{"user"=>{}}}
+Completed 401 Unauthorized in 1ms
+
+
+Started POST "/users.json" for 127.0.0.1 at 2015-10-12 11:49:08 -0300
+Processing by Devise::RegistrationsController#create as JSON
+  Parameters: {"user"=>{"email"=>"brunoeriss@gmail.com", "username"=>"brunoeris", "password"=>"[FILTERED]"}, "registration"=>{"user"=>{"email"=>"brunoeriss@gmail.com", "username"=>"brunoeris", "password"=>"[FILTERED]"}}}
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."email" = 'brunoeriss@gmail.com' LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "users" ("email", "encrypted_password", "username", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["email", "brunoeriss@gmail.com"], ["encrypted_password", "$2a$10$ActZqyr0Pp8MiOZ0ga3wquZs8k320SRnbxKifJhi0OrJymTr/g6Nu"], ["username", "brunoeris"], ["created_at", "2015-10-12 14:49:08.587728"], ["updated_at", "2015-10-12 14:49:08.587728"]]
+  [1m[35m (121.9ms)[0m  commit transaction
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.4ms)[0m  UPDATE "users" SET "last_sign_in_at" = ?, "current_sign_in_at" = ?, "last_sign_in_ip" = ?, "current_sign_in_ip" = ?, "sign_in_count" = ?, "updated_at" = ? WHERE "users"."id" = ?  [["last_sign_in_at", "2015-10-12 14:49:08.713323"], ["current_sign_in_at", "2015-10-12 14:49:08.713323"], ["last_sign_in_ip", "127.0.0.1"], ["current_sign_in_ip", "127.0.0.1"], ["sign_in_count", 1], ["updated_at", "2015-10-12 14:49:08.717048"], ["id", 1]]
+  [1m[36m (111.6ms)[0m  [1mcommit transaction[0m
+Completed 201 Created in 391ms (Views: 0.6ms | ActiveRecord: 235.2ms)
+
+
+Started GET "/posts.json" for 127.0.0.1 at 2015-10-12 11:49:08 -0300
+Processing by PostsController#index as JSON
+  [1m[35mPost Load (0.3ms)[0m  SELECT "posts".* FROM "posts"
+Completed 200 OK in 4ms (Views: 1.1ms | ActiveRecord: 0.3ms)
+
+
+Started POST "/posts.json" for 127.0.0.1 at 2015-10-12 11:49:15 -0300
+Processing by PostsController#create as JSON
+  Parameters: {"title"=>"erwer", "link"=>"werw", "post"=>{"title"=>"erwer", "link"=>"werw"}}
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("link", "title", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["link", "werw"], ["title", "erwer"], ["user_id", 1], ["created_at", "2015-10-12 14:49:15.421916"], ["updated_at", "2015-10-12 14:49:15.421916"]]
+  [1m[35m (213.2ms)[0m  commit transaction
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComment Load (0.3ms)[0m  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = ?  [["post_id", 1]]
+Completed 201 Created in 269ms (Views: 33.4ms | ActiveRecord: 215.3ms)
+
+
+Started GET "/assets/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2" for 127.0.0.1 at 2015-10-12 11:49:15 -0300
+
+
+Started PUT "/posts/1/upvote.json" for 127.0.0.1 at 2015-10-12 11:49:30 -0300
+Processing by PostsController#upvote as JSON
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mPost Load (0.4ms)[0m  SELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.5ms)[0m  UPDATE "posts" SET "upvotes" = ?, "updated_at" = ? WHERE "posts"."id" = ?  [["upvotes", 1], ["updated_at", "2015-10-12 14:49:30.708375"], ["id", 1]]
+  [1m[36m (123.2ms)[0m  [1mcommit transaction[0m
+Completed 204 No Content in 144ms (ActiveRecord: 124.5ms)
+
+
+Started PUT "/posts/1/upvote.json" for 127.0.0.1 at 2015-10-12 11:49:32 -0300
+Processing by PostsController#upvote as JSON
+  Parameters: {"id"=>"1"}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mPost Load (0.2ms)[0m  [1mSELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.3ms)[0m  [1mUPDATE "posts" SET "upvotes" = ?, "updated_at" = ? WHERE "posts"."id" = ?[0m  [["upvotes", 2], ["updated_at", "2015-10-12 14:49:32.626370"], ["id", 1]]
+  [1m[35m (123.7ms)[0m  commit transaction
+Completed 204 No Content in 139ms (ActiveRecord: 124.5ms)
+
+
+Started PUT "/posts/1/upvote.json" for 127.0.0.1 at 2015-10-12 11:49:34 -0300
+Processing by PostsController#upvote as JSON
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mPost Load (0.3ms)[0m  SELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.6ms)[0m  UPDATE "posts" SET "upvotes" = ?, "updated_at" = ? WHERE "posts"."id" = ?  [["upvotes", 3], ["updated_at", "2015-10-12 14:49:34.879852"], ["id", 1]]
+  [1m[36m (117.0ms)[0m  [1mcommit transaction[0m
+Completed 204 No Content in 136ms (ActiveRecord: 118.2ms)
+
+
+Started POST "/posts.json" for 127.0.0.1 at 2015-10-12 11:49:37 -0300
+Processing by PostsController#create as JSON
+  Parameters: {"title"=>"sdfs", "link"=>"sdfs", "post"=>{"title"=>"sdfs", "link"=>"sdfs"}}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "posts" ("link", "title", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["link", "sdfs"], ["title", "sdfs"], ["user_id", 1], ["created_at", "2015-10-12 14:49:37.185159"], ["updated_at", "2015-10-12 14:49:37.185159"]]
+  [1m[36m (148.5ms)[0m  [1mcommit transaction[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mComment Load (0.2ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE "comments"."post_id" = ?[0m  [["post_id", 2]]
+Completed 201 Created in 174ms (Views: 8.9ms | ActiveRecord: 149.7ms)
+
+
+Started PUT "/posts/2/upvote.json" for 127.0.0.1 at 2015-10-12 11:49:42 -0300
+Processing by PostsController#upvote as JSON
+  Parameters: {"id"=>"2"}
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mPost Load (0.1ms)[0m  [1mSELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36mSQL (0.2ms)[0m  [1mUPDATE "posts" SET "upvotes" = ?, "updated_at" = ? WHERE "posts"."id" = ?[0m  [["upvotes", 1], ["updated_at", "2015-10-12 14:49:42.131069"], ["id", 2]]
+  [1m[35m (121.7ms)[0m  commit transaction
+Completed 204 No Content in 131ms (ActiveRecord: 122.3ms)
+
+
+Started GET "/posts/1.json" for 127.0.0.1 at 2015-10-12 11:49:50 -0300
+Processing by PostsController#show as JSON
+  Parameters: {"id"=>"1"}
+  [1m[36mPost Load (0.1ms)[0m  [1mSELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mComment Load (0.1ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE "comments"."post_id" = ?[0m  [["post_id", 1]]
+Completed 200 OK in 11ms (Views: 3.3ms | ActiveRecord: 0.4ms)
+
+
+Started POST "/posts/1/comments.json" for 127.0.0.1 at 2015-10-12 11:49:53 -0300
+Processing by CommentsController#create as JSON
+  Parameters: {"body"=>"dsfdsdfsfsdf", "author"=>"user", "post_id"=>"1", "comment"=>{"body"=>"dsfdsdfsfsdf"}}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mPost Load (0.2ms)[0m  [1mSELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "comments" ("body", "user_id", "post_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["body", "dsfdsdfsfsdf"], ["user_id", 1], ["post_id", 1], ["created_at", "2015-10-12 14:49:53.680556"], ["updated_at", "2015-10-12 14:49:53.680556"]]
+  [1m[35m (156.6ms)[0m  commit transaction
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+Completed 201 Created in 185ms (Views: 7.5ms | ActiveRecord: 157.6ms)
+
+
+Started PUT "/posts/1/comments/1/upvote.json" for 127.0.0.1 at 2015-10-12 11:49:55 -0300
+Processing by CommentsController#upvote as JSON
+  Parameters: {"post_id"=>"1", "id"=>"1"}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mPost Load (0.1ms)[0m  [1mSELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComment Load (0.3ms)[0m  SELECT  "comments".* FROM "comments" WHERE "comments"."post_id" = ? AND "comments"."id" = ? LIMIT 1  [["post_id", 1], ["id", 1]]
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.4ms)[0m  UPDATE "comments" SET "upvotes" = ?, "updated_at" = ? WHERE "comments"."id" = ?  [["upvotes", 1], ["updated_at", "2015-10-12 14:49:55.036509"], ["id", 1]]
+  [1m[36m (152.2ms)[0m  [1mcommit transaction[0m
+Completed 204 No Content in 168ms (ActiveRecord: 153.3ms)
+
+
+Started PUT "/posts/1/comments/1/upvote.json" for 127.0.0.1 at 2015-10-12 11:49:55 -0300
+Processing by CommentsController#upvote as JSON
+  Parameters: {"post_id"=>"1", "id"=>"1"}
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mPost Load (0.1ms)[0m  [1mSELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComment Load (0.1ms)[0m  SELECT  "comments".* FROM "comments" WHERE "comments"."post_id" = ? AND "comments"."id" = ? LIMIT 1  [["post_id", 1], ["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  UPDATE "comments" SET "upvotes" = ?, "updated_at" = ? WHERE "comments"."id" = ?  [["upvotes", 2], ["updated_at", "2015-10-12 14:49:55.655236"], ["id", 1]]
+  [1m[36m (134.0ms)[0m  [1mcommit transaction[0m
+Completed 204 No Content in 143ms (ActiveRecord: 134.4ms)
+
+
+Started PUT "/posts/1/comments/1/upvote.json" for 127.0.0.1 at 2015-10-12 11:49:56 -0300
+Processing by CommentsController#upvote as JSON
+  Parameters: {"post_id"=>"1", "id"=>"1"}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mPost Load (0.1ms)[0m  [1mSELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComment Load (0.1ms)[0m  SELECT  "comments".* FROM "comments" WHERE "comments"."post_id" = ? AND "comments"."id" = ? LIMIT 1  [["post_id", 1], ["id", 1]]
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.3ms)[0m  UPDATE "comments" SET "upvotes" = ?, "updated_at" = ? WHERE "comments"."id" = ?  [["upvotes", 3], ["updated_at", "2015-10-12 14:49:56.011789"], ["id", 1]]
+  [1m[36m (108.6ms)[0m  [1mcommit transaction[0m
+Completed 204 No Content in 121ms (ActiveRecord: 109.6ms)
+
+
+Started GET "/posts.json" for 127.0.0.1 at 2015-10-12 11:50:00 -0300
+Processing by PostsController#index as JSON
+  [1m[35mPost Load (0.3ms)[0m  SELECT "posts".* FROM "posts"
+  [1m[36mUser Load (0.7ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComment Load (0.2ms)[0m  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = ?  [["post_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mComment Load (0.2ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE "comments"."post_id" = ?[0m  [["post_id", 2]]
+Completed 200 OK in 19ms (Views: 13.2ms | ActiveRecord: 1.4ms)
+
+
+Started GET "/" for 127.0.0.1 at 2015-10-12 11:50:16 -0300
+Processing by ApplicationController#angular as HTML
+  Rendered layouts/application.html.erb within layouts/application (148.3ms)
+Completed 200 OK in 229ms (Views: 228.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/posts.json" for 127.0.0.1 at 2015-10-12 11:50:17 -0300
+Processing by PostsController#index as JSON
+  [1m[35mPost Load (0.3ms)[0m  SELECT "posts".* FROM "posts"
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComment Load (0.1ms)[0m  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = ?  [["post_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mComment Load (0.1ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE "comments"."post_id" = ?[0m  [["post_id", 2]]
+Completed 200 OK in 18ms (Views: 14.4ms | ActiveRecord: 0.7ms)
+
+
+Started POST "/users/sign_in.json" for 127.0.0.1 at 2015-10-12 11:50:17 -0300
+Processing by Devise::SessionsController#create as JSON
+  Parameters: {"user"=>{}, "session"=>{"user"=>{}}}
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+Completed 201 Created in 24ms (Views: 2.3ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/assets/bootstrap/dist/css/bootstrap.css.map" for 127.0.0.1 at 2015-10-12 11:50:17 -0300
+
+
+Started GET "/" for 127.0.0.1 at 2015-10-12 11:51:46 -0300
+Processing by ApplicationController#angular as HTML
+  Rendered layouts/application.html.erb within layouts/application (54.6ms)
+Completed 200 OK in 112ms (Views: 111.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/posts.json" for 127.0.0.1 at 2015-10-12 11:51:47 -0300
+Processing by PostsController#index as JSON
+  [1m[36mPost Load (0.3ms)[0m  [1mSELECT "posts".* FROM "posts"[0m
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mComment Load (0.1ms)[0m  [1mSELECT "comments".* FROM "comments" WHERE "comments"."post_id" = ?[0m  [["post_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mComment Load (0.1ms)[0m  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = ?  [["post_id", 2]]
+Completed 200 OK in 19ms (Views: 14.6ms | ActiveRecord: 0.7ms)
+
+
+Started POST "/users/sign_in.json" for 127.0.0.1 at 2015-10-12 11:51:47 -0300
+Processing by Devise::SessionsController#create as JSON
+  Parameters: {"user"=>{}, "session"=>{"user"=>{}}}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+Completed 201 Created in 8ms (Views: 1.8ms | ActiveRecord: 0.2ms)
